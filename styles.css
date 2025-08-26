@@ -427,7 +427,7 @@ html {
 .floating-card {
     position: absolute;
     background: white;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--border-radius-md);
     box-shadow: var(--shadow-medium);
     display: flex;
@@ -436,9 +436,10 @@ html {
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
     transition: all var(--transition-normal);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     white-space: nowrap;
-    max-width: 140px;
+    max-width: 110px;
+    z-index: 1;
 }
 
 .floating-card:hover {
@@ -452,20 +453,20 @@ html {
 }
 
 .card-1 {
-    top: 15%;
-    left: 15%;
+    top: 20%;
+    left: 8%;
     animation: circularFloat1 8s ease-in-out infinite;
 }
 
 .card-2 {
-    top: 45%;
-    right: 15%;
+    top: 35%;
+    right: 8%;
     animation: circularFloat2 10s ease-in-out infinite;
 }
 
 .card-3 {
-    bottom: 15%;
-    left: 25%;
+    bottom: 25%;
+    left: 20%;
     animation: circularFloat3 12s ease-in-out infinite;
 }
 
@@ -474,13 +475,13 @@ html {
         transform: translateX(0px) translateY(0px) rotate(0deg);
     }
     25% {
-        transform: translateX(15px) translateY(-10px) rotate(2deg);
+        transform: translateX(10px) translateY(-8px) rotate(1deg);
     }
     50% {
-        transform: translateX(20px) translateY(-20px) rotate(1deg);
+        transform: translateX(15px) translateY(-15px) rotate(0deg);
     }
     75% {
-        transform: translateX(5px) translateY(-15px) rotate(-1deg);
+        transform: translateX(5px) translateY(-8px) rotate(-1deg);
     }
 }
 
@@ -489,13 +490,13 @@ html {
         transform: translateX(0px) translateY(0px) rotate(0deg);
     }
     25% {
-        transform: translateX(-10px) translateY(-15px) rotate(-1deg);
+        transform: translateX(-8px) translateY(-10px) rotate(-1deg);
     }
     50% {
-        transform: translateX(-20px) translateY(-25px) rotate(-2deg);
+        transform: translateX(-15px) translateY(-18px) rotate(-1deg);
     }
     75% {
-        transform: translateX(-15px) translateY(-10px) rotate(1deg);
+        transform: translateX(-10px) translateY(-8px) rotate(1deg);
     }
 }
 
@@ -504,13 +505,13 @@ html {
         transform: translateX(0px) translateY(0px) rotate(0deg);
     }
     25% {
-        transform: translateX(20px) translateY(10px) rotate(1deg);
+        transform: translateX(12px) translateY(8px) rotate(1deg);
     }
     50% {
-        transform: translateX(10px) translateY(20px) rotate(-1deg);
+        transform: translateX(8px) translateY(15px) rotate(-1deg);
     }
     75% {
-        transform: translateX(-5px) translateY(15px) rotate(2deg);
+        transform: translateX(-2px) translateY(10px) rotate(1deg);
     }
 }
 
@@ -526,24 +527,46 @@ html {
     }
     
     .floating-card {
-        font-size: 0.8rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        max-width: 120px;
+        font-size: 0.75rem;
+        padding: 6px 8px;
+        max-width: 95px;
     }
     
     .card-1 {
-        top: 10%;
-        left: 5%;
+        top: 15%;
+        left: 3%;
     }
     
     .card-2 {
-        top: 40%;
-        right: 5%;
+        top: 35%;
+        right: 3%;
     }
     
     .card-3 {
-        bottom: 10%;
-        left: 20%;
+        bottom: 20%;
+        left: 15%;
+    }
+    
+    /* Reduce animation range on mobile */
+    @keyframes circularFloat1 {
+        0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+        25% { transform: translateX(5px) translateY(-5px) rotate(1deg); }
+        50% { transform: translateX(8px) translateY(-8px) rotate(0deg); }
+        75% { transform: translateX(3px) translateY(-5px) rotate(-1deg); }
+    }
+    
+    @keyframes circularFloat2 {
+        0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+        25% { transform: translateX(-5px) translateY(-5px) rotate(-1deg); }
+        50% { transform: translateX(-8px) translateY(-8px) rotate(-1deg); }
+        75% { transform: translateX(-5px) translateY(-3px) rotate(1deg); }
+    }
+    
+    @keyframes circularFloat3 {
+        0%, 100% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+        25% { transform: translateX(6px) translateY(4px) rotate(1deg); }
+        50% { transform: translateX(4px) translateY(8px) rotate(-1deg); }
+        75% { transform: translateX(-1px) translateY(5px) rotate(1deg); }
     }
     
     .hero-cta {
