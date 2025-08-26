@@ -427,7 +427,7 @@ html {
 .floating-card {
     position: absolute;
     background: white;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius-md);
     box-shadow: var(--shadow-medium);
     display: flex;
@@ -436,9 +436,10 @@ html {
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
     transition: all var(--transition-normal);
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     white-space: nowrap;
-    max-width: 110px;
+    min-width: 120px;
+    max-width: 150px;
     z-index: 1;
 }
 
@@ -453,20 +454,20 @@ html {
 }
 
 .card-1 {
-    top: 20%;
-    left: 8%;
+    top: 18%;
+    left: 5%;
     animation: circularFloat1 8s ease-in-out infinite;
 }
 
 .card-2 {
-    top: 35%;
-    right: 8%;
+    top: 40%;
+    right: 5%;
     animation: circularFloat2 10s ease-in-out infinite;
 }
 
 .card-3 {
-    bottom: 25%;
-    left: 20%;
+    bottom: 22%;
+    left: 15%;
     animation: circularFloat3 12s ease-in-out infinite;
 }
 
@@ -475,13 +476,13 @@ html {
         transform: translateX(0px) translateY(0px) rotate(0deg);
     }
     25% {
-        transform: translateX(10px) translateY(-8px) rotate(1deg);
+        transform: translateX(8px) translateY(-6px) rotate(1deg);
     }
     50% {
-        transform: translateX(15px) translateY(-15px) rotate(0deg);
+        transform: translateX(12px) translateY(-12px) rotate(0deg);
     }
     75% {
-        transform: translateX(5px) translateY(-8px) rotate(-1deg);
+        transform: translateX(4px) translateY(-6px) rotate(-1deg);
     }
 }
 
@@ -490,13 +491,13 @@ html {
         transform: translateX(0px) translateY(0px) rotate(0deg);
     }
     25% {
-        transform: translateX(-8px) translateY(-10px) rotate(-1deg);
+        transform: translateX(-6px) translateY(-8px) rotate(-1deg);
     }
     50% {
-        transform: translateX(-15px) translateY(-18px) rotate(-1deg);
+        transform: translateX(-12px) translateY(-15px) rotate(-1deg);
     }
     75% {
-        transform: translateX(-10px) translateY(-8px) rotate(1deg);
+        transform: translateX(-8px) translateY(-6px) rotate(1deg);
     }
 }
 
@@ -505,13 +506,13 @@ html {
         transform: translateX(0px) translateY(0px) rotate(0deg);
     }
     25% {
-        transform: translateX(12px) translateY(8px) rotate(1deg);
+        transform: translateX(10px) translateY(6px) rotate(1deg);
     }
     50% {
-        transform: translateX(8px) translateY(15px) rotate(-1deg);
+        transform: translateX(6px) translateY(12px) rotate(-1deg);
     }
     75% {
-        transform: translateX(-2px) translateY(10px) rotate(1deg);
+        transform: translateX(-1px) translateY(8px) rotate(1deg);
     }
 }
 
@@ -527,24 +528,25 @@ html {
     }
     
     .floating-card {
-        font-size: 0.75rem;
-        padding: 6px 8px;
-        max-width: 95px;
+        font-size: 0.8rem;
+        padding: 8px 10px;
+        min-width: 105px;
+        max-width: 130px;
     }
     
     .card-1 {
         top: 15%;
-        left: 3%;
+        left: 2%;
     }
     
     .card-2 {
         top: 35%;
-        right: 3%;
+        right: 2%;
     }
     
     .card-3 {
         bottom: 20%;
-        left: 15%;
+        left: 12%;
     }
     
     /* Reduce animation range on mobile */
