@@ -385,12 +385,13 @@ html {
 }
 
 .hero-tagline {
-    font-size: 1.2rem;
-    font-weight: var(--font-weight-semibold);
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
     color: white;
     text-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
     margin-bottom: var(--spacing-lg);
     font-family: var(--font-primary);
+    line-height: 1.2;
 }
 
 .hero-cta {
@@ -575,17 +576,19 @@ html {
         grid-template-columns: 1fr;
         text-align: center;
         gap: var(--spacing-lg);
-        padding-top: calc(var(--spacing-lg) + 0.5cm);
+        padding-top: calc(var(--spacing-lg) + 3cm);
     }
     
     .hero-text {
         order: -1;
         margin-bottom: var(--spacing-lg);
+        transform: translateY(-2cm);
     }
     
     .hero-tagline {
-        font-size: 1.1rem;
-        margin-bottom: var(--spacing-md);
+        font-size: 1.4rem;
+        margin-bottom: var(--spacing-lg);
+        font-weight: var(--font-weight-bold);
     }
     
     .hero-visual {
