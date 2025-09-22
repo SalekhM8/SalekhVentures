@@ -576,13 +576,13 @@ html {
         grid-template-columns: 1fr;
         text-align: center;
         gap: var(--spacing-lg);
-        padding-top: calc(var(--spacing-lg) + 3cm);
+        padding-top: calc(var(--spacing-lg) + 3.5cm);
     }
     
     .hero-text {
         order: -1;
         margin-bottom: var(--spacing-lg);
-        transform: translateY(-2cm);
+        transform: translateY(-2.5cm);
     }
     
     .hero-tagline {
