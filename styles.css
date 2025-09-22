@@ -346,7 +346,7 @@ html {
     position: relative;
     z-index: 2;
     backdrop-filter: blur(1px);
-    padding-top: var(--spacing-xxl);
+    padding-top: calc(var(--spacing-xxl) + 1cm);
 }
 
 .hero-title {
@@ -382,6 +382,15 @@ html {
     border-radius: var(--border-radius-md);
     backdrop-filter: blur(5px);
     border: 1px solid rgba(213, 218, 224, 0.3);
+}
+
+.hero-tagline {
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-semibold);
+    color: white;
+    text-shadow: 0 3px 15px rgba(0, 0, 0, 0.8);
+    margin-bottom: var(--spacing-lg);
+    font-family: var(--font-primary);
 }
 
 .hero-cta {
@@ -566,12 +575,17 @@ html {
         grid-template-columns: 1fr;
         text-align: center;
         gap: var(--spacing-lg);
-        padding-top: var(--spacing-lg);
+        padding-top: calc(var(--spacing-lg) + 0.5cm);
     }
     
     .hero-text {
         order: -1;
         margin-bottom: var(--spacing-lg);
+    }
+    
+    .hero-tagline {
+        font-size: 1.1rem;
+        margin-bottom: var(--spacing-md);
     }
     
     .hero-visual {
