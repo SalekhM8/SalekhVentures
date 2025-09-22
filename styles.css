@@ -342,10 +342,11 @@ html {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-xxl);
-    align-items: center;
+    align-items: flex-start;
     position: relative;
     z-index: 2;
     backdrop-filter: blur(1px);
+    padding-top: var(--spacing-xxl);
 }
 
 .hero-title {
@@ -387,6 +388,7 @@ html {
     display: flex;
     gap: var(--spacing-md);
     flex-wrap: wrap;
+    margin-top: 0;
 }
 
 .btn {
@@ -564,6 +566,12 @@ html {
         grid-template-columns: 1fr;
         text-align: center;
         gap: var(--spacing-lg);
+        padding-top: var(--spacing-lg);
+    }
+    
+    .hero-text {
+        order: -1;
+        margin-bottom: var(--spacing-lg);
     }
     
     .hero-visual {
@@ -578,19 +586,25 @@ html {
     }
     
     .card-1 {
-        top: 12%;
+        top: 25%;
         left: 5%;
     }
     
     .card-2 {
-        top: 32%;
+        top: 45%;
         right: 5%;
     }
     
     .card-3 {
-        bottom: 18%;
+        bottom: 25%;
         left: 15%;
     }
+    
+    .hero-cta {
+        justify-content: center;
+        margin-top: 0;
+    }
+}
     
     /* Reduce animation range on mobile */
     @keyframes circularFloat1 {
