@@ -110,6 +110,29 @@ html {
     box-shadow: none;
 }
 
+.navbar.scrolled {
+    background: rgba(244, 246, 248, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 20px rgba(52, 73, 94, 0.08);
+}
+
+.navbar.scrolled .nav-brand a,
+.navbar.scrolled .nav-menu a {
+    color: var(--accent-color);
+    text-shadow: none;
+}
+
+.navbar.scrolled .rotating-text {
+    color: var(--accent-color);
+    text-shadow: none;
+}
+
+.navbar.scrolled .nav-menu a:hover {
+    color: var(--accent-light);
+    background: var(--hover-bg);
+}
+
 .navbar .container {
     display: flex;
     justify-content: space-between;

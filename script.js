@@ -20,13 +20,9 @@ function initNavigation() {
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
         if (window.scrollY > 100) {
-            navbar.style.background = 'rgba(254, 254, 254, 0.98)';
-            navbar.style.backdropFilter = 'blur(20px)';
-            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.08)';
+            navbar.classList.add('scrolled');
         } else {
-            navbar.style.background = 'rgba(254, 254, 254, 0.95)';
-            navbar.style.backdropFilter = 'blur(20px)';
-            navbar.style.boxShadow = 'none';
+            navbar.classList.remove('scrolled');
         }
     });
     
