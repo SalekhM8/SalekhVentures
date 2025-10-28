@@ -46,10 +46,24 @@
             playsinline 
             preload="auto"
             webkit-playsinline
-            x5-playsinline
             x-webkit-airplay="allow"
-            class="hero-video" 
-            id="hero-video">
+            defaultMuted
+            class="hero-video desktop-video" 
+            id="desktop-video">
+            <source src="desktopheroventures.mp4" type="video/mp4">
+        </video>
+        <video 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            preload="auto"
+            webkit-playsinline
+            x-webkit-airplay="allow"
+            defaultMuted
+            class="hero-video mobile-video" 
+            id="mobile-video">
+            <source src="venturesmain.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
     </div>
@@ -58,7 +72,7 @@
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content-centered">
-                <p class="hero-tagline">Getting client dreams from A to B</p>
+                <p class="hero-tagline">Turning potential into 💰 for clients</p>
                 <div class="hero-cta">
                     <a href="#work" class="btn btn-primary">View My Work</a>
                     <a href="https://calendly.com/salekhventures/15mins" target="_blank" class="btn btn-secondary">Book Free Consultation</a>
