@@ -386,32 +386,11 @@ html, body {
     display: none !important;
 }
 
-/* Default: Show desktop, hide mobile */
-.desktop-video {
+/* Single responsive video */
+.hero-video {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-}
-
-.mobile-video {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-}
-
-/* Mobile: Hide desktop, show mobile */
-@media (max-width: 768px) {
-    .desktop-video {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-    }
-    
-    .mobile-video {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
 }
 
 .video-overlay {

@@ -12,21 +12,37 @@ document.addEventListener('DOMContentLoaded', function() {
     forceVideoPlayback();
 });
 
-// BULLETPROOF iOS video playback
+// BULLETPROOF iOS video playback - SINGLE VIDEO APPROACH
 function forceVideoPlayback() {
-    const desktopVideo = document.getElementById('desktop-video');
-    const mobileVideo = document.getElementById('mobile-video');
+    const videoElement = document.getElementById('hero-video');
     
-    // Determine which video to use based on screen width
+    if (!videoElement) {
+        console.error('❌ Video element not found!');
+        return;
+    }
+    
+    // Determine which video to load based on screen width
     const isMobile = window.innerWidth <= 768;
-    const activeVideo = isMobile ? mobileVideo : desktopVideo;
-    const inactiveVideo = isMobile ? desktopVideo : mobileVideo;
+    const videoSrc = isMobile ? 'venturesmain.mp4' : 'desktopheroventures.mp4';
     
-    // CSS already handles show/hide, we just need to ensure playback
     console.log('🎥 Mobile detected:', isMobile);
-    console.log('🎥 Active video:', activeVideo ? activeVideo.id : 'none');
-    console.log('🎥 Mobile video src:', mobileVideo ? mobileVideo.currentSrc : 'none');
-    console.log('🎥 Desktop video src:', desktopVideo ? desktopVideo.currentSrc : 'none');
+    console.log('🎥 Loading video:', videoSrc);
+    console.log('🎥 Window width:', window.innerWidth);
+    
+    // Set the video source dynamically
+    videoElement.innerHTML = `<source src="${videoSrc}" type="video/mp4">`;
+    
+    // Force video attributes
+    videoElement.muted = true;
+    videoElement.defaultMuted = true;
+    videoElement.setAttribute('muted', '');
+    videoElement.setAttribute('playsinline', '');
+    videoElement.setAttribute('webkit-playsinline', '');
+    
+    // Load the video
+    videoElement.load();
+    
+    const activeVideo = videoElement;
     
     // Function to attempt video play
     function attemptPlay(video) {
@@ -64,8 +80,26 @@ function forceVideoPlayback() {
         }, 100);
     }
     
-    // Try immediately
-    attemptPlay(activeVideo);
+    // Wait for video to be ready before playing
+    if (activeVideo) {
+        if (activeVideo.readyState >= 3) {
+            // Video is ready, play now
+            attemptPlay(activeVideo);
+        } else {
+            // Wait for video to load enough data
+            activeVideo.addEventListener('canplay', function() {
+                console.log('🎬 Video canplay event fired for:', activeVideo.id);
+                attemptPlay(activeVideo);
+            }, { once: true });
+            
+            activeVideo.addEventListener('loadedmetadata', function() {
+                console.log('📊 Video metadata loaded for:', activeVideo.id);
+            }, { once: true });
+        }
+    }
+    
+    // Also try immediately in case it's already ready
+    setTimeout(() => attemptPlay(activeVideo), 500);
     
     // Retry on ANY user interaction (multiple events for iOS)
     const events = ['touchstart', 'touchend', 'click', 'scroll'];
