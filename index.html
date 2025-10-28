@@ -39,11 +39,31 @@
 
     <!-- Fixed Video Background -->
     <div class="fixed-video-background">
-        <video autoplay muted loop playsinline preload="auto" webkit-playsinline class="hero-video desktop-video" id="desktop-video">
+        <video 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            preload="auto"
+            webkit-playsinline
+            x-webkit-airplay="allow"
+            class="hero-video desktop-video" 
+            id="desktop-video">
             <source src="desktopheroventures.mp4" type="video/mp4">
+            Your browser does not support the video tag.
         </video>
-        <video autoplay muted loop playsinline preload="auto" webkit-playsinline class="hero-video mobile-video" id="mobile-video">
+        <video 
+            autoplay 
+            muted 
+            loop 
+            playsinline 
+            preload="auto"
+            webkit-playsinline
+            x-webkit-airplay="allow"
+            class="hero-video mobile-video" 
+            id="mobile-video">
             <source src="venturesmain.mp4" type="video/mp4">
+            Your browser does not support the video tag.
         </video>
         <div class="video-overlay"></div>
         <!-- Fallback gradient if video doesn't load -->

@@ -12,32 +12,98 @@ document.addEventListener('DOMContentLoaded', function() {
     forceVideoPlayback();
 });
 
-// Force video playback on iOS
+// BULLETPROOF iOS video playback
 function forceVideoPlayback() {
     const desktopVideo = document.getElementById('desktop-video');
     const mobileVideo = document.getElementById('mobile-video');
     
-    // Try to play videos
-    if (desktopVideo) {
-        desktopVideo.play().catch(err => {
-            console.log('Desktop video autoplay prevented:', err);
-        });
+    // Determine which video to use based on screen width
+    const isMobile = window.innerWidth <= 768;
+    const activeVideo = isMobile ? mobileVideo : desktopVideo;
+    const inactiveVideo = isMobile ? desktopVideo : mobileVideo;
+    
+    // Ensure correct video is visible
+    if (isMobile) {
+        mobileVideo.style.display = 'block';
+        desktopVideo.style.display = 'none';
+    } else {
+        desktopVideo.style.display = 'block';
+        mobileVideo.style.display = 'none';
     }
     
-    if (mobileVideo) {
-        mobileVideo.play().catch(err => {
-            console.log('Mobile video autoplay prevented:', err);
-        });
-    }
-    
-    // Retry on user interaction
-    document.addEventListener('touchstart', function() {
-        if (window.innerWidth <= 768 && mobileVideo) {
-            mobileVideo.play();
-        } else if (desktopVideo) {
-            desktopVideo.play();
+    // Function to attempt video play
+    function attemptPlay(video) {
+        if (!video) return;
+        
+        // Force load
+        video.load();
+        
+        // Attempt play
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    console.log('Video playing successfully!');
+                })
+                .catch(err => {
+                    console.log('Autoplay prevented, waiting for user interaction:', err);
+                });
         }
-    }, { once: true });
+    }
+    
+    // Try immediately
+    attemptPlay(activeVideo);
+    
+    // Retry on ANY user interaction (multiple events for iOS)
+    const events = ['touchstart', 'touchend', 'click', 'scroll'];
+    let played = false;
+    
+    events.forEach(eventType => {
+        document.addEventListener(eventType, function handler() {
+            if (!played && activeVideo) {
+                attemptPlay(activeVideo);
+                played = true;
+                
+                // Remove all event listeners after first successful play
+                events.forEach(e => {
+                    document.removeEventListener(e, handler);
+                });
+            }
+        }, { once: true, passive: true });
+    });
+    
+    // Also try when video is in viewport
+    if (activeVideo && 'IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    attemptPlay(activeVideo);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        observer.observe(activeVideo);
+    }
+    
+    // Handle orientation change
+    window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+            attemptPlay(activeVideo);
+        }, 300);
+    });
+    
+    // Fallback: Keep trying every 2 seconds for first 10 seconds
+    let attempts = 0;
+    const maxAttempts = 5;
+    const retryInterval = setInterval(() => {
+        if (activeVideo && activeVideo.paused && attempts < maxAttempts) {
+            attemptPlay(activeVideo);
+            attempts++;
+        } else {
+            clearInterval(retryInterval);
+        }
+    }, 2000);
 }
 
 // Navigation functionality
@@ -48,17 +114,22 @@ function initNavigation() {
     
     // Mobile menu toggle
     if (navToggle && navMenu) {
-        navToggle.addEventListener('click', (e) => {
+        navToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
+            
+            console.log('Menu toggle clicked!');
+            
             navMenu.classList.toggle('active');
             navToggle.classList.toggle('active');
             
             // Prevent body scroll when menu is open
             if (navMenu.classList.contains('active')) {
                 document.body.style.overflow = 'hidden';
+                console.log('Menu opened');
             } else {
                 document.body.style.overflow = 'auto';
+                console.log('Menu closed');
             }
         });
         
@@ -73,16 +144,20 @@ function initNavigation() {
         });
     }
     
-    // Close mobile menu when clicking on links
+    // Close mobile menu when clicking on links - SIMPLIFIED
     const navLinks = document.querySelectorAll('.nav-menu a');
     navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            if (navMenu.classList.contains('active')) {
+        link.addEventListener('click', function(e) {
+            console.log('Nav link clicked:', link.getAttribute('href'));
+            
+            // Close menu
+            if (navMenu && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
                 document.body.style.overflow = 'auto';
+                console.log('Menu closed after click');
             }
-        });
+        }, { passive: false });
     });
 }
 
@@ -91,20 +166,40 @@ function initSmoothScrolling() {
     const links = document.querySelectorAll('a[href^="#"]');
     
     links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            
+        link.addEventListener('click', function(e) {
             const targetId = link.getAttribute('href');
+            
+            // Skip if it's just "#" or empty
+            if (!targetId || targetId === '#') {
+                e.preventDefault();
+                return;
+            }
+            
             const targetSection = document.querySelector(targetId);
             
             if (targetSection) {
-                const navHeight = document.querySelector('.navbar').offsetHeight;
-                const targetPosition = targetSection.offsetTop - navHeight - 20;
+                e.preventDefault();
                 
+                // Close mobile menu if open
+                const navMenu = document.querySelector('.nav-menu');
+                const navToggle = document.querySelector('.nav-toggle');
+                if (navMenu && navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                    navToggle.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+                
+                // Calculate position
+                const navHeight = 160; // Fixed height for glass nav
+                const targetPosition = targetSection.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                
+                // Smooth scroll
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
                 });
+                
+                console.log('Navigating to:', targetId);
             }
         });
     });
