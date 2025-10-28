@@ -1,7 +1,18 @@
 // Portfolio Website JavaScript
 // Handles animations, interactions, and form functionality
 
+// Force scroll to top on page load/reload
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+
+// Immediate scroll to top (before DOM loads)
+window.scrollTo(0, 0);
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Force scroll to top again when DOM is ready
+    window.scrollTo(0, 0);
+    
     // Initialize all features
     initNavigation();
     initScrollAnimations();
@@ -10,6 +21,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initParallax();
     forceVideoPlayback();
+});
+
+// Also handle page show event (for back/forward navigation)
+window.addEventListener('pageshow', function(event) {
+    // If page is loaded from cache (back/forward button)
+    if (event.persisted) {
+        window.scrollTo(0, 0);
+    }
 });
 
 // BULLETPROOF iOS video playback with enhanced mobile support
@@ -119,10 +138,37 @@ function forceVideoPlayback() {
         setupIOSVideo(activeVideo);
     }
     
-    // Try immediately (will likely fail on iOS, but worth trying)
-    attemptPlay(activeVideo, 1).catch(err => {
-        console.log('Initial play failed (expected on iOS), waiting for user interaction...');
-    });
+    // CRITICAL: Wait for video to be ready before trying to play
+    // This is the fix for the "works on reload but not first load" issue
+    if (activeVideo) {
+        // If video is already loaded (cached), play immediately
+        if (activeVideo.readyState >= 3) { // HAVE_FUTURE_DATA or better
+            console.log('✅ Video already loaded (cached), playing now');
+            attemptPlay(activeVideo, 1).catch(err => {
+                console.log('Initial play failed, waiting for user interaction...');
+            });
+        } else {
+            // Video not loaded yet - wait for it
+            console.log('⏳ Video not loaded yet, waiting for canplay event...');
+            
+            activeVideo.addEventListener('canplay', function onCanPlay() {
+                console.log('✅ Video can play now, attempting playback');
+                attemptPlay(activeVideo, 1).catch(err => {
+                    console.log('Play after canplay failed, waiting for interaction...');
+                });
+                // Remove listener after first trigger
+                activeVideo.removeEventListener('canplay', onCanPlay);
+            }, { once: true });
+            
+            // Also listen for loadeddata as a backup
+            activeVideo.addEventListener('loadeddata', function onLoadedData() {
+                console.log('✅ Video data loaded, attempting playback');
+                attemptPlay(activeVideo, 1).catch(err => {
+                    console.log('Play after loadeddata failed, waiting for interaction...');
+                });
+            }, { once: true });
+        }
+    }
     
     // AGGRESSIVE user interaction detection for iOS
     let hasPlayed = false;
@@ -212,15 +258,10 @@ function forceVideoPlayback() {
             });
         });
         
-        activeVideo.addEventListener('loadeddata', () => {
-            console.log('✅ Video data loaded');
-        });
-        
-        activeVideo.addEventListener('canplay', () => {
-            console.log('✅ Video can play');
-            if (!hasPlayed) {
-                attemptPlay(activeVideo, 7);
-            }
+        // Monitor when video actually starts playing
+        activeVideo.addEventListener('playing', () => {
+            console.log('✅ Video is now playing!');
+            hasPlayed = true;
         });
     }
 }
