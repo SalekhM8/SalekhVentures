@@ -22,33 +22,11 @@ function forceVideoPlayback() {
     const activeVideo = isMobile ? mobileVideo : desktopVideo;
     const inactiveVideo = isMobile ? desktopVideo : mobileVideo;
     
-    // Ensure correct video is visible and FORCE it
-    if (isMobile) {
-        if (mobileVideo) {
-            mobileVideo.style.display = 'block';
-            mobileVideo.style.visibility = 'visible';
-            mobileVideo.style.opacity = '1';
-        }
-        if (desktopVideo) {
-            desktopVideo.style.display = 'none';
-            desktopVideo.style.visibility = 'hidden';
-        }
-    } else {
-        if (desktopVideo) {
-            desktopVideo.style.display = 'block';
-            desktopVideo.style.visibility = 'visible';
-            desktopVideo.style.opacity = '1';
-        }
-        if (mobileVideo) {
-            mobileVideo.style.display = 'none';
-            mobileVideo.style.visibility = 'hidden';
-        }
-    }
-    
-    console.log('Mobile detected:', isMobile);
-    console.log('Active video:', activeVideo ? activeVideo.id : 'none');
-    console.log('Mobile video display:', mobileVideo ? window.getComputedStyle(mobileVideo).display : 'n/a');
-    console.log('Desktop video display:', desktopVideo ? window.getComputedStyle(desktopVideo).display : 'n/a');
+    // CSS already handles show/hide, we just need to ensure playback
+    console.log('🎥 Mobile detected:', isMobile);
+    console.log('🎥 Active video:', activeVideo ? activeVideo.id : 'none');
+    console.log('🎥 Mobile video src:', mobileVideo ? mobileVideo.currentSrc : 'none');
+    console.log('🎥 Desktop video src:', desktopVideo ? desktopVideo.currentSrc : 'none');
     
     // Function to attempt video play
     function attemptPlay(video) {
