@@ -22,34 +22,68 @@ function forceVideoPlayback() {
     const activeVideo = isMobile ? mobileVideo : desktopVideo;
     const inactiveVideo = isMobile ? desktopVideo : mobileVideo;
     
-    // Ensure correct video is visible
+    // Ensure correct video is visible and FORCE it
     if (isMobile) {
-        mobileVideo.style.display = 'block';
-        desktopVideo.style.display = 'none';
+        if (mobileVideo) {
+            mobileVideo.style.display = 'block';
+            mobileVideo.style.visibility = 'visible';
+            mobileVideo.style.opacity = '1';
+        }
+        if (desktopVideo) {
+            desktopVideo.style.display = 'none';
+            desktopVideo.style.visibility = 'hidden';
+        }
     } else {
-        desktopVideo.style.display = 'block';
-        mobileVideo.style.display = 'none';
+        if (desktopVideo) {
+            desktopVideo.style.display = 'block';
+            desktopVideo.style.visibility = 'visible';
+            desktopVideo.style.opacity = '1';
+        }
+        if (mobileVideo) {
+            mobileVideo.style.display = 'none';
+            mobileVideo.style.visibility = 'hidden';
+        }
     }
+    
+    console.log('Mobile detected:', isMobile);
+    console.log('Active video:', activeVideo ? activeVideo.id : 'none');
+    console.log('Mobile video display:', mobileVideo ? window.getComputedStyle(mobileVideo).display : 'n/a');
+    console.log('Desktop video display:', desktopVideo ? window.getComputedStyle(desktopVideo).display : 'n/a');
     
     // Function to attempt video play
     function attemptPlay(video) {
-        if (!video) return;
+        if (!video) {
+            console.log('No video element provided');
+            return;
+        }
+        
+        console.log('Attempting to play video:', video.id);
+        console.log('Video ready state:', video.readyState);
+        console.log('Video paused:', video.paused);
+        
+        // Force attributes
+        video.muted = true;
+        video.setAttribute('muted', '');
+        video.setAttribute('playsinline', '');
+        video.defaultMuted = true;
         
         // Force load
         video.load();
         
-        // Attempt play
-        const playPromise = video.play();
-        
-        if (playPromise !== undefined) {
-            playPromise
-                .then(() => {
-                    console.log('Video playing successfully!');
-                })
-                .catch(err => {
-                    console.log('Autoplay prevented, waiting for user interaction:', err);
-                });
-        }
+        // Small delay then play
+        setTimeout(() => {
+            const playPromise = video.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('✅ Video playing successfully!', video.id);
+                    })
+                    .catch(err => {
+                        console.error('❌ Autoplay prevented for', video.id, err);
+                    });
+            }
+        }, 100);
     }
     
     // Try immediately
