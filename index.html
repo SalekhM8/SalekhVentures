@@ -7,20 +7,22 @@
     <meta name="description" content="Full stack developer specializing in transforming businesses through innovative digital solutions. From fitness apps to business platforms, I create impactful technology solutions.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Logo Above Navigation -->
+    <div class="logo-container">
+        <a href="#home">
+            <div class="rotating-logo">
+                <span class="rotating-text">SALEKH VENTURES</span>
+            </div>
+        </a>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <a href="#home">
-                    <div class="rotating-logo">
-                        <span class="rotating-text">Salekh Ventures</span>
-                    </div>
-                </a>
-            </div>
+        <div class="nav-content">
             <ul class="nav-menu">
                 <li><a href="#about">About</a></li>
                 <li><a href="#work">Work</a></li>
@@ -35,31 +37,25 @@
         </div>
     </nav>
 
+    <!-- Fixed Video Background -->
+    <div class="fixed-video-background">
+        <video autoplay muted loop playsinline class="hero-video desktop-video">
+            <source src="desktopheroventures.mp4" type="video/mp4">
+        </video>
+        <video autoplay muted loop playsinline class="hero-video mobile-video">
+            <source src="venturesmain.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
     <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-image"></div>
         <div class="container">
-            <div class="hero-content">
-                <div class="hero-text">
-                    <p class="hero-tagline">Turning potential into 💰 for clients</p>
-                    <div class="hero-cta">
-                        <a href="#work" class="btn btn-primary">View My Work</a>
-                        <a href="#contact" class="btn btn-secondary">Let's Connect</a>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="floating-card card-1">
-                        <div class="card-icon">📱</div>
-                        <span>Mobile Apps</span>
-                    </div>
-                    <div class="floating-card card-2">
-                        <div class="card-icon">🌐</div>
-                        <span>Web Platforms</span>
-                    </div>
-                    <div class="floating-card card-3">
-                        <div class="card-icon">⚡</div>
-                        <span>Digital Solutions</span>
-                    </div>
+            <div class="hero-content-centered">
+                <p class="hero-tagline">Turning potential into 💰 for clients</p>
+                <div class="hero-cta">
+                    <a href="#work" class="btn btn-primary">View My Work</a>
+                    <a href="https://calendly.com/salekhventures/15mins" target="_blank" class="btn btn-secondary">Book Free Consultation</a>
                 </div>
             </div>
         </div>
@@ -318,6 +314,126 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Twilight Pharmacy -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <div class="project-mockup web-mockup">
+                            <div class="browser-frame">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="browser-content">
+                                    <div class="website-preview pharmacy-preview">
+                                        <div class="preview-header">💊 Twilight Pharmacy</div>
+                                        <div class="services-grid">
+                                            <div class="service-item">💉 Vaccination Services</div>
+                                            <div class="service-item">🏥 NHS Pharmacy First</div>
+                                            <div class="service-item">💪 Weight Loss Programs</div>
+                                            <div class="service-item">🩺 Health Consultations</div>
+                                        </div>
+                                        <div class="coverage">3 Birmingham Locations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-category">Healthcare • Web Platform</div>
+                        <h3>Twilight Pharmacy</h3>
+                        <p>One of UK's best and largest pharmacy chains. Comprehensive digital platform providing online booking, service information, and seamless patient experience across three Birmingham locations.</p>
+                        <div class="portfolio-highlights">
+                            <span class="highlight">3 Locations</span>
+                            <span class="highlight">NHS Services</span>
+                            <span class="highlight">Online Booking</span>
+                        </div>
+                        <div class="portfolio-links">
+                            <a href="https://www.twilightpharmacy.co.uk/" target="_blank" class="link-external">View Website</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Path of Refinement -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <div class="project-mockup web-mockup">
+                            <div class="browser-frame">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="browser-content">
+                                    <div class="website-preview wellness-preview">
+                                        <div class="preview-header">🧘 Path of Refinement</div>
+                                        <div class="services-grid">
+                                            <div class="service-item">🏋️ Personal Training</div>
+                                            <div class="service-item">🧠 Mental Wellness</div>
+                                            <div class="service-item">🥗 Nutrition Guidance</div>
+                                            <div class="service-item">💆 Holistic Therapy</div>
+                                        </div>
+                                        <div class="coverage">Transform Your Future</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-category">Wellness • React</div>
+                        <h3>Path of Refinement</h3>
+                        <p>Premium wellness centre focused on holistic personal development. Elegant digital platform showcasing comprehensive wellness services, virtual consultations, and personalized transformation journeys.</p>
+                        <div class="portfolio-highlights">
+                            <span class="highlight">Holistic Approach</span>
+                            <span class="highlight">Virtual Sessions</span>
+                            <span class="highlight">Expert Guidance</span>
+                        </div>
+                        <div class="portfolio-links">
+                            <a href="https://pathofresistance.vercel.app" target="_blank" class="link-external">View Website</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- An-Nur Academy -->
+                <div class="portfolio-item">
+                    <div class="portfolio-image">
+                        <div class="project-mockup web-mockup">
+                            <div class="browser-frame">
+                                <div class="browser-header">
+                                    <div class="browser-dots">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="browser-content">
+                                    <div class="website-preview education-preview">
+                                        <div class="preview-header">📖 An-Nur Academy</div>
+                                        <div class="subject-grid">
+                                            <div class="subject-item">📿 Quran Studies</div>
+                                            <div class="subject-item">🔤 Arabic Language</div>
+                                            <div class="subject-item">📚 Islamic Studies</div>
+                                            <div class="subject-item">🎓 Tajweed</div>
+                                        </div>
+                                        <div class="success-rate">Global Online Access</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portfolio-content">
+                        <div class="portfolio-category">Education • Next.js</div>
+                        <h3>An-Nur Academy</h3>
+                        <p>UK-based online Islamic school providing quality Quranic and Arabic education worldwide. Modern learning platform with qualified teachers, flexible scheduling, and segregated classes for students of all ages.</p>
+                        <div class="portfolio-highlights">
+                            <span class="highlight">UK-Based Teachers</span>
+                            <span class="highlight">Worldwide Access</span>
+                            <span class="highlight">Flexible Learning</span>
+                        </div>
+                        <div class="portfolio-links">
+                            <a href="https://annuronline.vercel.app" target="_blank" class="link-external">View Website</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -470,7 +586,7 @@
                             <div class="contact-icon">✉️</div>
                             <div class="contact-details">
                                 <h3>Email</h3>
-                                <a href="mailto:hello@salekhmahmood.com">hello@salekhmahmood.com</a>
+                                <a href="mailto:salekhventures@gmail.com">salekhventures@gmail.com</a>
                             </div>
                         </div>
                         <div class="contact-method">
@@ -511,7 +627,7 @@
                         </div>
                         <input type="hidden" name="_next" value="https://salekhventures.com#contact">
                         <input type="hidden" name="_subject" value="New Portfolio Enquiry from Salekh Ventures Website">
-                        <input type="hidden" name="_cc" value="salmood@icloud.com">
+                        <input type="hidden" name="_cc" value="salekhventures@gmail.com">
                         <button type="submit" class="btn btn-primary full-width">Send Message</button>
                     </form>
                 </div>

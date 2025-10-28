@@ -17,19 +17,11 @@ function initNavigation() {
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
     
-    // Navbar scroll effect
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 100) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-    
     // Mobile menu toggle
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             navMenu.classList.toggle('active');
             navToggle.classList.toggle('active');
             
@@ -43,7 +35,8 @@ function initNavigation() {
         
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+            const navContent = document.querySelector('.nav-content');
+            if (!navContent.contains(e.target) && !navMenu.contains(e.target)) {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
                 document.body.style.overflow = 'auto';
@@ -58,6 +51,7 @@ function initNavigation() {
             if (navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
                 navToggle.classList.remove('active');
+                document.body.style.overflow = 'auto';
             }
         });
     });
@@ -299,22 +293,10 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Parallax effect for hero section
+// Parallax effect for hero section (disabled for fixed background)
 function initParallax() {
-    const hero = document.querySelector('.hero');
-    const floatingCards = document.querySelectorAll('.floating-card');
-    
-    if (hero && floatingCards.length > 0) {
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxSpeed = 0.5;
-            
-            floatingCards.forEach((card, index) => {
-                const speed = parallaxSpeed * (index + 1) * 0.3;
-                card.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-    }
+    // Disabled to keep floating cards in their animated positions
+    // Fixed background handles the parallax effect
 }
 
 // Enhanced hover effects for portfolio items
@@ -339,22 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Floating cards interaction
-document.addEventListener('DOMContentLoaded', () => {
-    const floatingCards = document.querySelectorAll('.floating-card');
-    
-    floatingCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            // Pause the floating animation on hover
-            card.style.animationPlayState = 'paused';
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            // Resume the floating animation
-            card.style.animationPlayState = 'running';
-        });
-    });
-});
+// Floating cards removed - no longer needed
 
 // Button hover effects
 document.addEventListener('DOMContentLoaded', () => {
