@@ -44,13 +44,15 @@
             muted 
             loop 
             playsinline 
-            preload="auto"
-            webkit-playsinline
+            preload="metadata"
+            webkit-playsinline="true"
+            x5-playsinline="true"
             x-webkit-airplay="allow"
-            defaultMuted
+            disablePictureInPicture
             class="hero-video desktop-video" 
-            id="desktop-video">
-            <source src="desktopheroventures.mp4" type="video/mp4">
+            id="desktop-video"
+            poster="hero.png">
+            <source src="desktopheroventures.mp4" type="video/mp4; codecs=avc1.42E01E,mp4a.40.2">
         </video>
         <video 
             autoplay 
@@ -58,12 +60,14 @@
             loop 
             playsinline 
             preload="auto"
-            webkit-playsinline
+            webkit-playsinline="true"
+            x5-playsinline="true"
             x-webkit-airplay="allow"
-            defaultMuted
+            disablePictureInPicture
             class="hero-video mobile-video" 
-            id="mobile-video">
-            <source src="venturesmain.mp4" type="video/mp4">
+            id="mobile-video"
+            poster="hero.png">
+            <source src="./venturesmain.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
     </div>

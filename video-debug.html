@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Debug - iPhone Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+        .debug-info {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            line-height: 1.8;
+            word-break: break-all;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        .status.success { background: #4CAF50; }
+        .status.error { background: #f44336; }
+        .status.warning { background: #ff9800; }
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #000 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        button:active {
+            background: #45a049;
+        }
+        #log {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 10px;
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px;
+        }
+        .log-error { color: #f44336; }
+        .log-success { color: #4CAF50; }
+        .log-info { color: #2196F3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 iPhone Video Debug</h1>
+        
+        <div class="debug-info">
+            <strong>Device Info:</strong><br>
+            User Agent: <span id="ua"></span><br>
+            Screen: <span id="screen"></span><br>
+            iOS: <span id="ios"></span><br>
+            Orientation: <span id="orientation"></span>
+        </div>
+
+        <div class="debug-info">
+            <strong>Network:</strong><br>
+            Connection: <span id="connection"></span><br>
+            Online: <span id="online"></span>
+        </div>
+
+        <div class="video-container">
+            <video 
+                autoplay 
+                muted 
+                loop 
+                playsinline 
+                preload="auto"
+                webkit-playsinline="true"
+                id="test-video">
+                <source src="./venturesmain.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="debug-info">
+            <strong>Video Status:</strong><br>
+            File: venturesmain.mp4<br>
+            Can Load: <span id="can-load" class="status warning">Testing...</span><br>
+            Ready State: <span id="ready-state"></span><br>
+            Network State: <span id="network-state"></span><br>
+            Current Src: <span id="current-src"></span><br>
+            Paused: <span id="paused"></span><br>
+            Error: <span id="error"></span>
+        </div>
+
+        <button onclick="forcePlay()">Force Play Video</button>
+        <button onclick="reloadVideo()">Reload Video</button>
+        <button onclick="checkFile()">Check File</button>
+
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const video = document.getElementById('test-video');
+        const log = document.getElementById('log');
+
+        // Logging function
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+
+        // Device info
+        document.getElementById('ua').textContent = navigator.userAgent;
+        document.getElementById('screen').textContent = `${window.innerWidth}x${window.innerHeight}`;
+        document.getElementById('ios').textContent = /iPad|iPhone|iPod/.test(navigator.userAgent) ? 'YES' : 'NO';
+        document.getElementById('orientation').textContent = window.innerWidth > window.innerHeight ? 'Landscape' : 'Portrait';
+
+        // Network info
+        document.getElementById('connection').textContent = navigator.connection ? navigator.connection.effectiveType : 'Unknown';
+        document.getElementById('online').textContent = navigator.onLine ? 'YES' : 'NO';
+
+        // Update video status
+        function updateStatus() {
+            document.getElementById('ready-state').textContent = video.readyState;
+            document.getElementById('network-state').textContent = video.networkState;
+            document.getElementById('current-src').textContent = video.currentSrc || 'None';
+            document.getElementById('paused').textContent = video.paused ? 'YES' : 'NO';
+            document.getElementById('error').textContent = video.error ? `${video.error.code}: ${video.error.message}` : 'None';
+        }
+
+        // Check if file exists
+        async function checkFile() {
+            addLog('Checking if venturesmain.mp4 is accessible...', 'info');
+            try {
+                const response = await fetch('./venturesmain.mp4', { method: 'HEAD' });
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    const type = response.headers.get('content-type');
+                    addLog(`✅ File exists! Size: ${size} bytes, Type: ${type}`, 'success');
+                    document.getElementById('can-load').textContent = 'YES';
+                    document.getElementById('can-load').className = 'status success';
+                } else {
+                    addLog(`❌ File not found! Status: ${response.status}`, 'error');
+                    document.getElementById('can-load').textContent = 'NO';
+                    document.getElementById('can-load').className = 'status error';
+                }
+            } catch (err) {
+                addLog(`❌ Error checking file: ${err.message}`, 'error');
+                document.getElementById('can-load').textContent = 'ERROR';
+                document.getElementById('can-load').className = 'status error';
+            }
+        }
+
+        // Force play
+        function forcePlay() {
+            addLog('Forcing video play...', 'info');
+            video.muted = true;
+            video.play()
+                .then(() => addLog('✅ Video playing!', 'success'))
+                .catch(err => addLog(`❌ Play failed: ${err.message}`, 'error'));
+        }
+
+        // Reload video
+        function reloadVideo() {
+            addLog('Reloading video...', 'info');
+            video.load();
+        }
+
+        // Video event listeners
+        video.addEventListener('loadstart', () => addLog('📥 Load started', 'info'));
+        video.addEventListener('loadedmetadata', () => addLog('📊 Metadata loaded', 'success'));
+        video.addEventListener('loadeddata', () => addLog('📦 Data loaded', 'success'));
+        video.addEventListener('canplay', () => addLog('▶️ Can play', 'success'));
+        video.addEventListener('playing', () => addLog('✅ Playing!', 'success'));
+        video.addEventListener('pause', () => addLog('⏸️ Paused', 'info'));
+        video.addEventListener('error', (e) => {
+            const err = video.error;
+            addLog(`❌ ERROR: Code ${err.code} - ${err.message}`, 'error');
+            updateStatus();
+        });
+        video.addEventListener('stalled', () => addLog('⚠️ Stalled', 'error'));
+        video.addEventListener('suspend', () => addLog('⏳ Suspended', 'info'));
+        video.addEventListener('waiting', () => addLog('⏳ Waiting', 'info'));
+
+        // Update status every second
+        setInterval(updateStatus, 1000);
+        updateStatus();
+
+        // Check file on load
+        window.addEventListener('load', () => {
+            addLog('Page loaded', 'info');
+            checkFile();
+            
+            // Try to play after a delay
+            setTimeout(() => {
+                addLog('Attempting autoplay...', 'info');
+                forcePlay();
+            }, 1000);
+        });
+
+        // Orientation change
+        window.addEventListener('orientationchange', () => {
+            addLog('Orientation changed', 'info');
+            document.getElementById('orientation').textContent = window.innerWidth > window.innerHeight ? 'Landscape' : 'Portrait';
+        });
+
+        addLog('🚀 Debug page initialized', 'success');
+    </script>
+</body>
+</html>
+

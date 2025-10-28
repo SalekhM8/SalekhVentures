@@ -12,110 +12,217 @@ document.addEventListener('DOMContentLoaded', function() {
     forceVideoPlayback();
 });
 
-// BULLETPROOF iOS video playback
+// BULLETPROOF iOS video playback with enhanced mobile support
 function forceVideoPlayback() {
     const desktopVideo = document.getElementById('desktop-video');
     const mobileVideo = document.getElementById('mobile-video');
     
-    // Determine which video to use based on screen width
+    // Detect iOS specifically
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isMobile = window.innerWidth <= 768;
     const activeVideo = isMobile ? mobileVideo : desktopVideo;
     const inactiveVideo = isMobile ? desktopVideo : mobileVideo;
     
-    // CSS already handles show/hide, we just need to ensure playback
-    console.log('🎥 Mobile detected:', isMobile);
-    console.log('🎥 Active video:', activeVideo ? activeVideo.id : 'none');
-    console.log('🎥 Mobile video src:', mobileVideo ? mobileVideo.currentSrc : 'none');
-    console.log('🎥 Desktop video src:', desktopVideo ? desktopVideo.currentSrc : 'none');
-    
-    // Function to attempt video play
-    function attemptPlay(video) {
-        if (!video) {
-            console.log('No video element provided');
-            return;
-        }
-        
-        console.log('Attempting to play video:', video.id);
-        console.log('Video ready state:', video.readyState);
-        console.log('Video paused:', video.paused);
-        
-        // Force attributes
-        video.muted = true;
-        video.setAttribute('muted', '');
-        video.setAttribute('playsinline', '');
-        video.defaultMuted = true;
-        
-        // Force load
-        video.load();
-        
-        // Small delay then play
-        setTimeout(() => {
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        console.log('✅ Video playing successfully!', video.id);
-                    })
-                    .catch(err => {
-                        console.error('❌ Autoplay prevented for', video.id, err);
-                    });
-            }
-        }, 100);
-    }
-    
-    // Try immediately
-    attemptPlay(activeVideo);
-    
-    // Retry on ANY user interaction (multiple events for iOS)
-    const events = ['touchstart', 'touchend', 'click', 'scroll'];
-    let played = false;
-    
-    events.forEach(eventType => {
-        document.addEventListener(eventType, function handler() {
-            if (!played && activeVideo) {
-                attemptPlay(activeVideo);
-                played = true;
-                
-                // Remove all event listeners after first successful play
-                events.forEach(e => {
-                    document.removeEventListener(e, handler);
-                });
-            }
-        }, { once: true, passive: true });
+    console.log('🎥 Device Info:', {
+        isIOS,
+        isMobile,
+        width: window.innerWidth,
+        userAgent: navigator.userAgent,
+        activeVideoId: activeVideo ? activeVideo.id : 'none'
     });
     
-    // Also try when video is in viewport
+    // Completely disable inactive video to prevent conflicts
+    if (inactiveVideo) {
+        inactiveVideo.pause();
+        inactiveVideo.removeAttribute('src');
+        inactiveVideo.load();
+    }
+    
+    // Enhanced iOS video setup
+    function setupIOSVideo(video) {
+        if (!video) return;
+        
+        // Critical iOS attributes
+        video.muted = true;
+        video.defaultMuted = true;
+        video.volume = 0;
+        video.playsInline = true;
+        
+        // Set all possible muted attributes
+        video.setAttribute('muted', 'muted');
+        video.setAttribute('playsinline', 'playsinline');
+        video.setAttribute('webkit-playsinline', 'webkit-playsinline');
+        video.setAttribute('x5-playsinline', 'x5-playsinline');
+        
+        // Remove controls to prevent iOS interference
+        video.removeAttribute('controls');
+        
+        console.log('📱 iOS video setup complete for:', video.id);
+    }
+    
+    // Function to attempt video play with extensive error handling
+    function attemptPlay(video, attemptNum = 1) {
+        if (!video) {
+            console.log('❌ No video element provided');
+            return Promise.reject('No video');
+        }
+        
+        console.log(`🎬 Attempt ${attemptNum} to play:`, video.id, {
+            readyState: video.readyState,
+            paused: video.paused,
+            currentSrc: video.currentSrc,
+            networkState: video.networkState,
+            error: video.error
+        });
+        
+        // If there's a video error, try to recover
+        if (video.error) {
+            console.error('❌ Video error detected:', video.error);
+            video.load(); // Try reloading
+        }
+        
+        // Setup iOS-specific attributes every time
+        if (isIOS) {
+            setupIOSVideo(video);
+        }
+        
+        // Force reload if not loaded
+        if (video.readyState < 2) {
+            video.load();
+        }
+        
+        return new Promise((resolve, reject) => {
+            // Try playing after a small delay
+            setTimeout(() => {
+                const playPromise = video.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise
+                        .then(() => {
+                            console.log('✅ Video playing successfully!', video.id);
+                            resolve();
+                        })
+                        .catch(err => {
+                            console.error(`❌ Play failed (attempt ${attemptNum}):`, video.id, err.name, err.message);
+                            reject(err);
+                        });
+                } else {
+                    console.log('⚠️ No play promise returned');
+                    resolve();
+                }
+            }, 150);
+        });
+    }
+    
+    // Initial setup
+    if (isIOS && activeVideo) {
+        setupIOSVideo(activeVideo);
+    }
+    
+    // Try immediately (will likely fail on iOS, but worth trying)
+    attemptPlay(activeVideo, 1).catch(err => {
+        console.log('Initial play failed (expected on iOS), waiting for user interaction...');
+    });
+    
+    // AGGRESSIVE user interaction detection for iOS
+    let hasPlayed = false;
+    const interactionEvents = ['touchstart', 'touchend', 'touchmove', 'click', 'scroll', 'gesturestart'];
+    
+    function playOnInteraction(event) {
+        if (hasPlayed || !activeVideo) return;
+        
+        console.log('🎯 User interaction detected:', event.type);
+        
+        attemptPlay(activeVideo, 2).then(() => {
+            hasPlayed = true;
+            // Clean up event listeners
+            interactionEvents.forEach(evt => {
+                document.removeEventListener(evt, playOnInteraction);
+            });
+        }).catch(err => {
+            console.log('Play on interaction failed, will keep trying...');
+        });
+    }
+    
+    // Attach to all interaction events
+    interactionEvents.forEach(eventType => {
+        document.addEventListener(eventType, playOnInteraction, { passive: true, once: false });
+    });
+    
+    // Intersection Observer to play when visible
     if (activeVideo && 'IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    attemptPlay(activeVideo);
+                if (entry.isIntersecting && !hasPlayed) {
+                    console.log('📍 Video in viewport, attempting play...');
+                    attemptPlay(activeVideo, 3);
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.25 });
         
         observer.observe(activeVideo);
     }
     
-    // Handle orientation change
+    // Handle orientation change (important for your issue!)
     window.addEventListener('orientationchange', () => {
+        console.log('📱 Orientation changed, reloading video...');
         setTimeout(() => {
-            attemptPlay(activeVideo);
-        }, 300);
+            if (activeVideo) {
+                activeVideo.load();
+                attemptPlay(activeVideo, 4);
+            }
+        }, 500);
     });
     
-    // Fallback: Keep trying every 2 seconds for first 10 seconds
-    let attempts = 0;
-    const maxAttempts = 5;
-    const retryInterval = setInterval(() => {
-        if (activeVideo && activeVideo.paused && attempts < maxAttempts) {
-            attemptPlay(activeVideo);
-            attempts++;
-        } else {
-            clearInterval(retryInterval);
+    // Handle visibility change (when user returns to tab)
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && activeVideo && activeVideo.paused) {
+            console.log('👁️ Tab visible, attempting play...');
+            attemptPlay(activeVideo, 5);
         }
-    }, 2000);
+    });
+    
+    // Persistent retry for mobile (more aggressive)
+    if (isMobile && activeVideo) {
+        let retryCount = 0;
+        const maxRetries = 10;
+        
+        const retryInterval = setInterval(() => {
+            if (activeVideo.paused && retryCount < maxRetries && !hasPlayed) {
+                console.log(`🔄 Retry ${retryCount + 1}/${maxRetries}...`);
+                attemptPlay(activeVideo, 6 + retryCount);
+                retryCount++;
+            } else {
+                clearInterval(retryInterval);
+                if (hasPlayed) {
+                    console.log('✅ Video successfully playing, stopping retries');
+                }
+            }
+        }, 3000);
+    }
+    
+    // Listen for video errors
+    if (activeVideo) {
+        activeVideo.addEventListener('error', (e) => {
+            console.error('❌ Video error event:', {
+                error: activeVideo.error,
+                code: activeVideo.error ? activeVideo.error.code : null,
+                message: activeVideo.error ? activeVideo.error.message : null,
+                src: activeVideo.currentSrc
+            });
+        });
+        
+        activeVideo.addEventListener('loadeddata', () => {
+            console.log('✅ Video data loaded');
+        });
+        
+        activeVideo.addEventListener('canplay', () => {
+            console.log('✅ Video can play');
+            if (!hasPlayed) {
+                attemptPlay(activeVideo, 7);
+            }
+        });
+    }
 }
 
 // Navigation functionality
