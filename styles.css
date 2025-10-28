@@ -329,7 +329,17 @@ html, body {
     height: 100vh;
     z-index: -999;
     overflow: hidden;
-    background: #000;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.video-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 50%, rgba(15, 52, 96, 0.8) 100%);
+    z-index: -1;
 }
 
 .hero-video {
@@ -339,6 +349,7 @@ html, body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 1;
 }
 
 .desktop-video {
@@ -367,7 +378,7 @@ html, body {
     height: 100%;
     background: rgba(0, 0, 0, 0.15);
     pointer-events: none;
-    z-index: 1;
+    z-index: 2;
 }
 
 /* Hero Section */
@@ -406,7 +417,12 @@ html, body {
     gap: var(--spacing-md);
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     margin-top: 0;
+}
+
+.hero-cta .btn {
+    flex: 0 0 auto;
 }
 
 /* Glass Buttons */

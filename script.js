@@ -9,7 +9,36 @@ document.addEventListener('DOMContentLoaded', function() {
     initContactForm();
     initSmoothScrolling();
     initParallax();
+    forceVideoPlayback();
 });
+
+// Force video playback on iOS
+function forceVideoPlayback() {
+    const desktopVideo = document.getElementById('desktop-video');
+    const mobileVideo = document.getElementById('mobile-video');
+    
+    // Try to play videos
+    if (desktopVideo) {
+        desktopVideo.play().catch(err => {
+            console.log('Desktop video autoplay prevented:', err);
+        });
+    }
+    
+    if (mobileVideo) {
+        mobileVideo.play().catch(err => {
+            console.log('Mobile video autoplay prevented:', err);
+        });
+    }
+    
+    // Retry on user interaction
+    document.addEventListener('touchstart', function() {
+        if (window.innerWidth <= 768 && mobileVideo) {
+            mobileVideo.play();
+        } else if (desktopVideo) {
+            desktopVideo.play();
+        }
+    }, { once: true });
+}
 
 // Navigation functionality
 function initNavigation() {
